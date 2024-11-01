@@ -1,0 +1,13 @@
+@startuml
+title General De-Identification Actor Diagram
+agent "Data Source" as DocumentSource 
+agent "Data Recipient (d)" as DocumentRecipientD
+agent "Data Recipient" as DocumentRecipient
+agent "De-Identification Service" as DeId
+agent "Data Source (d)" as DocumentSourceD
+
+DocumentSource -> DocumentRecipient : "Send data"
+DocumentRecipient .. DeId: "Grouped"
+DeId .. DocumentSourceD: "Grouped"
+DocumentSourceD -> DocumentRecipientD : "Send data"
+@enduml

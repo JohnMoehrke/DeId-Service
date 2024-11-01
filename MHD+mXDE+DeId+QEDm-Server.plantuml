@@ -1,0 +1,51 @@
+@startuml
+title MHD+mXDE+De-Id+QEDm Actor Diagram
+agent "MHD Document Source" as DocumentSource 
+agent "QEDm Client (d)" as DocumentRecipientD
+
+package "De-Id Server" {
+agent "MHD Document Recipient" as DocumentRecipient
+agent "mXDE Data Element Extractor" as Extractor
+database "database bulk" as database
+agent "De-Identification Algorithm" as DeId
+database "database deId" as databaseD
+agent "QEDm Server (d)" as DocumentSourceD
+agent "Re-Identification Assessment" as ReId
+database "Pseudonym\ndatabase\n(optional)" as ReDb
+
+DocumentRecipient --> Extractor
+Extractor --> database
+database --> DeId
+note right of DeId
+    start de-identification 
+    only when sufficient 
+    data in dataset
+end note
+DeId --> databaseD
+
+json policy {
+   "fruit":"group",
+   "size":"redact",
+   "color": "fuzz",
+   "pseudonym": "true",
+   "k": "4"
+}
+note top of policy
+    written using IHE 
+    De-Identification 
+    Handbook
+end note
+policy --> DeId
+DeId <-down-> ReDb
+
+databaseD --> ReId
+note right of ReId
+    release the dataset 
+    only when meets policy 
+    (e.g. k-anonymity)
+end note
+ReId --> DocumentSourceD
+}
+DocumentSource -down-> DocumentRecipient : "ITI-65 Provide Document Bundle"
+DocumentSourceD -down-> DocumentRecipientD : "PCC-44 Mobile Query Existing Data"
+@enduml

@@ -1,0 +1,7 @@
+@startuml
+title General Actor Diagram
+agent "Data Source" as DocumentSource 
+agent "Data Recipient" as DocumentRecipient
+
+DocumentSource -> DocumentRecipient : "Send data"
+@enduml
